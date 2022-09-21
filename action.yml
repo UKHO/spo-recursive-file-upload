@@ -20,6 +20,9 @@ inputs:
   source_path:
     description: "Source file paths to be uploaded to SPO. Separate multiple files using a semicolon."
     required: true
+  base:
+    description: "Base path to retain folder structure in SPO"
+    required: false
 runs:
   using: "node16"
   main: "dist/index.js"
