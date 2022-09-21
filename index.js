@@ -9,6 +9,7 @@ try {
   const password = core.getInput("password")
   const destinationPath = core.getInput("destination_path")
   const source_path = core.getInput("source_path").split(";")
+  const base = core.getInput("base")
 
     // Define SPSave Configuration
   const coreOptions = {
@@ -22,7 +23,8 @@ try {
 
   const fileOptions = {
     folder: destinationPath,
-    glob: source_path
+    glob: source_path,
+    base: base
   }
 
   // Upload to SPO
