@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/ukho/spo-recursive-file-upload/issues"
   },
-  "homepage": "https://github.com/ukho/spo-recursive-file-upload#readme"
+  "homepage": "https://github.com/ukho/spo-recursive-file-upload#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@actions/github": "^5.1.1",
+    "spsave": "^4.0.2"
+  }
 }
