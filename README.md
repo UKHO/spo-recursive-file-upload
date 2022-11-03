@@ -11,11 +11,17 @@ Upload a file, or files, to SharePoint Online using the `spsave` package.
 `source_path`: Source file path(s) to be uploaded to SPO. Separate multiple files using a semicolon `;`.
 `base`: If you want to preserve folders structure inside SharePoint folder, you can provide a base for you files. For example when using glob ['build/css/*.*'] and base: 'build', all css files will be loaded under [SharePoint folder]/css.  
 
-## Assumptions
+## Things you need to know
 
 - Files are directly uploaded via the `glob` method in the `spsave` package.
 - SPO account must not have multi-factor authentication turned on, or must use an application-specific password. Service accounts are preferred.
 - Multiple files are uploaded to the same destination path.
+- run `npm install` to get packages
+- Pack is complied using vercel/ncc
+  - install using `npm i -g @vercel/ncc`
+  - compile dist using: `ncc build index.js --license licenses.txt`
+  - action.yml points to dist/index.js for this reason, the index.js in the root is purely for development. 
+  - Make sure to run `ncc build index.js --license licenses.txt` before committing any changes to github
 
 ## Example Usage
 
@@ -28,6 +34,7 @@ with:
   password: ${{ secrets.SPO_PASSWORD }}
   destination_path: Shared Documents
   source_path: dist/my-file.txt
+  base: dist
   # or for multiple files
   # source_path: dist/my-file1.txt;dist/my-file2.txt
 ...
@@ -39,4 +46,4 @@ This is released under an MIT any issues please feel free to take a copy, we wil
 
 ## Credits
 
-This base application was taken from [Justin McLawhorn's SPO-file-upload](https://github.com/justinmcla/spo-file-upload), we needed a recursive action, so took a copy.
+This base application was taken from [s-KaiNet's SPSave](https://github.com/s-KaiNet/spsave).
