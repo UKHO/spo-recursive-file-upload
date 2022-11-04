@@ -83,7 +83,7 @@ function run() {
         try {
             const config = (0, config_1.getConfig)();
             const fileDetails = (0, getAllFiles_1.getAllFiles)(config.source_path);
-            const modifiedFiles = (0, modifyFileContents_1.modifyFileContents)(fileDetails, config.destinationPath);
+            const modifiedFiles = (0, modifyFileContents_1.modifyFileContents)(fileDetails, config);
             // Define SPSave Configuration
             const coreOptions = {
                 siteUrl: config.siteUrl
@@ -116,25 +116,29 @@ run();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.modifyFileContents = void 0;
 const path_1 = __nccwpck_require__(71017);
-function modifyFileContents(fileDetails, destinationPath) {
+function modifyFileContents(fileDetails, config) {
     const filesToUpload = [];
+    const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/";
     fileDetails.forEach((fileDetail) => {
         if ((0, path_1.extname)(fileDetail.name) != ".md") {
             console.log(`${fileDetail.name} is not a markdown file so skipping`);
             filesToUpload.push({
                 fileName: fileDetail.name,
                 fileContent: fileDetail.buffer,
-                folder: destinationPath
+                folder: config.destinationPath
             });
-            return;
         }
-        const fileAsString = fileDetail.buffer.toString();
-        // Modify the file contents here!!!!
-        filesToUpload.push({
-            fileName: fileDetail.name,
-            fileContent: fileAsString,
-            folder: destinationPath
-        });
+        else {
+            let fileAsString = fileDetail.buffer.toString();
+            // Modify the file contents here!!!!
+            // modify absoulte path to resource images and link
+            fileAsString = fileAsString.replaceAll("\]\((?!http)", "](" + absoluteUrl);
+            filesToUpload.push({
+                fileName: fileDetail.name,
+                fileContent: fileAsString,
+                folder: config.destinationPath
+            });
+        }
     });
     return filesToUpload;
 }
