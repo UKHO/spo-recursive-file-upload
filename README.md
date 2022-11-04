@@ -18,10 +18,7 @@ Upload a file, or files, to SharePoint Online using the `spsave` package.
 - Multiple files are uploaded to the same destination path.
 - run `npm install` to get packages
 - Pack is complied using vercel/ncc
-  - install using `npm i -g @vercel/ncc`
-  - compile dist using: `ncc build index.js --license licenses.txt`
-  - action.yml points to dist/index.js for this reason, the index.js in the root is purely for development. 
-  - Make sure to run `ncc build index.js --license licenses.txt` before committing any changes to github
+  - To build just run `npm run package`, this will compile the typescript and run ncc
 
 ## Example Usage
 
