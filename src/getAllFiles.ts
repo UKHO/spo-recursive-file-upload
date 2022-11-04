@@ -12,12 +12,11 @@ export function getAllFiles(sourcePaths: string[]) : FileDetails[] {
         const files = readdirSync(sourcePath)
 
         files.forEach((file) => {
-
-            const buffer = readFileSync(file);
-
+            const filePath = sourcePath + "/" + file
+            const buffer = readFileSync(filePath);
 
             fileDetails.push({
-                name: file,
+                name: filePath,
                 buffer: buffer,
             })
         })
