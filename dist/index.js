@@ -44,9 +44,10 @@ function getAllFiles(sourcePaths) {
     sourcePaths.forEach((sourcePath) => {
         const files = (0, fs_1.readdirSync)(sourcePath);
         files.forEach((file) => {
-            const buffer = (0, fs_1.readFileSync)(file);
+            const filePath = sourcePath + "/" + file;
+            const buffer = (0, fs_1.readFileSync)(filePath);
             fileDetails.push({
-                name: file,
+                name: filePath,
                 buffer: buffer,
             });
         });
