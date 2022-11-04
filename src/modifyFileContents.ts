@@ -3,10 +3,15 @@ import {IFileContentOptions} from "spsave";
 import {extname} from "path";
 
 export function modifyFileContents(fileDetails: FileDetails[], destinationPath: string) : IFileContentOptions[] {
-    const modifiedFiles: IFileContentOptions[] = [];
+    const filesToUpload: IFileContentOptions[] = [];
     fileDetails.forEach((fileDetail) => {
         if (extname(fileDetail.name) != ".md") {
             console.log(`${fileDetail.name} is not a markdown file so skipping`);
+            filesToUpload.push({
+                fileName: fileDetail.name,
+                fileContent: fileDetail.buffer,
+                folder: destinationPath
+            });
             return;
         }
 
@@ -14,11 +19,11 @@ export function modifyFileContents(fileDetails: FileDetails[], destinationPath: 
 
         // Modify the file contents here!!!!
 
-        modifiedFiles.push({
+        filesToUpload.push({
             fileName: fileDetail.name,
             fileContent: fileAsString,
             folder: destinationPath
         })
     });
-    return modifiedFiles;
+    return filesToUpload;
 }

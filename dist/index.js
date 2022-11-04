@@ -117,21 +117,26 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.modifyFileContents = void 0;
 const path_1 = __nccwpck_require__(71017);
 function modifyFileContents(fileDetails, destinationPath) {
-    const modifiedFiles = [];
+    const filesToUpload = [];
     fileDetails.forEach((fileDetail) => {
         if ((0, path_1.extname)(fileDetail.name) != ".md") {
             console.log(`${fileDetail.name} is not a markdown file so skipping`);
+            filesToUpload.push({
+                fileName: fileDetail.name,
+                fileContent: fileDetail.buffer,
+                folder: destinationPath
+            });
             return;
         }
         const fileAsString = fileDetail.buffer.toString();
         // Modify the file contents here!!!!
-        modifiedFiles.push({
+        filesToUpload.push({
             fileName: fileDetail.name,
             fileContent: fileAsString,
             folder: destinationPath
         });
     });
-    return modifiedFiles;
+    return filesToUpload;
 }
 exports.modifyFileContents = modifyFileContents;
 
