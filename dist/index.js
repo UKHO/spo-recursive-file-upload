@@ -61,13 +61,21 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getAllFiles = void 0;
+const core_1 = __nccwpck_require__(42186);
 const fs_1 = __nccwpck_require__(57147);
 const recursiveReadDir = __importStar(__nccwpck_require__(6715));
 function getAllFiles(sourcePaths) {
     const fileDetails = [];
     sourcePaths.forEach((sourcePath) => {
+        (0, core_1.info)("Starting: " + sourcePath);
         recursiveReadDir.default(sourcePath, (err, files) => {
+            if (err) {
+                (0, core_1.error)(err);
+                throw err;
+            }
+            (0, core_1.info)(files.toString());
             files.forEach((file) => {
+                (0, core_1.info)("Reading:" + file);
                 const buffer = (0, fs_1.readFileSync)(file);
                 fileDetails.push({
                     name: file,
@@ -140,6 +148,7 @@ run();
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.modifyFileContents = void 0;
+const core_1 = __nccwpck_require__(42186);
 const path_1 = __nccwpck_require__(71017);
 function modifyFileContents(fileDetails, config) {
     const filesToUpload = [];
@@ -147,6 +156,7 @@ function modifyFileContents(fileDetails, config) {
     fileDetails.forEach((fileDetail) => {
         if ((0, path_1.extname)(fileDetail.name) != ".md") {
             console.log(`${fileDetail.name} is not a markdown file so skipping`);
+            (0, core_1.info)("Adding resources:" + fileDetail.name);
             filesToUpload.push({
                 fileName: fileDetail.name,
                 fileContent: fileDetail.buffer,
@@ -154,6 +164,7 @@ function modifyFileContents(fileDetails, config) {
             });
         }
         else {
+            (0, core_1.info)("processing:" + fileDetail.name);
             let fileAsString = fileDetail.buffer.toString();
             // Modify the file contents here!!!!
             // modify absoulte path to resource images and link
@@ -179,8 +190,10 @@ exports.modifyFileContents = modifyFileContents;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.uploadToSPO = void 0;
+const core_1 = __nccwpck_require__(42186);
 const spsave_1 = __nccwpck_require__(26338);
 function uploadToSPO(coreOptions, credentials, fileOptions) {
+    (0, core_1.info)(fileOptions.fileName);
     // Upload to SPO
     (0, spsave_1.spsave)(coreOptions, credentials, fileOptions)
         .catch(err => {

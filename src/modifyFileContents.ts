@@ -1,7 +1,8 @@
+import { info } from "@actions/core";
 import { FileDetails } from "./getAllFiles";
 import { IFileContentOptions } from "spsave";
 import { extname } from "path";
-import {Config} from "./config";
+import { Config } from "./config";
 
 export function modifyFileContents(fileDetails: FileDetails[], config: Config): IFileContentOptions[] {
     const filesToUpload: IFileContentOptions[] = [];
@@ -9,6 +10,7 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
     fileDetails.forEach((fileDetail) => {
         if (extname(fileDetail.name) != ".md") {
             console.log(`${fileDetail.name} is not a markdown file so skipping`);
+            info("Adding resources:" + fileDetail.name);
             filesToUpload.push({
                 fileName: fileDetail.name,
                 fileContent: fileDetail.buffer,
@@ -16,11 +18,12 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
             });
         } else {
 
+            info("processing:" + fileDetail.name);
             let fileAsString = fileDetail.buffer.toString();
 
             // Modify the file contents here!!!!
             // modify absoulte path to resource images and link
-            fileAsString = fileAsString.replaceAll("\]\((?!http)","](" + absoluteUrl)
+            fileAsString = fileAsString.replaceAll("\]\((?!http)", "](" + absoluteUrl)
 
             filesToUpload.push({
                 fileName: fileDetail.name,
