@@ -1,6 +1,6 @@
 import {getInput} from "@actions/core";
 
-export interface config {
+export interface Config {
     siteUrl: string,
     username: string,
     password: string,
@@ -9,7 +9,7 @@ export interface config {
     base: string
 }
 
-export function getConfig() : config {
+export function getConfig() : Config {
     // Get action inputs.
     const siteUrl = getInput("site_url")
     const username = getInput("username")
