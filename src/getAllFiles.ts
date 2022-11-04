@@ -12,10 +12,6 @@ export function getAllFiles(sourcePaths: string[]) : FileDetails[] {
         const files = readdirSync(sourcePath)
 
         files.forEach((file) => {
-            if (extname(file) != ".md") {
-                console.log(`${file} is not a markdown file so skipping`);
-                return;
-            }
 
             const buffer = readFileSync(file);
 
