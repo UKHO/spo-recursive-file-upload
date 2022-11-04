@@ -7,12 +7,10 @@ export async function uploadToSPO(coreOptions : ICoreOptions, config: Config, fi
     const username = getInput("username")
     const password = getInput("password")
 
-    info(username.length.toString())
-    info(password.length.toString())
-
     const credentials = {
         username: username,
-        password: password
+        password: password,
+        online: true
     }
 
     info("Uploading: " + fileOptions.fileName);
