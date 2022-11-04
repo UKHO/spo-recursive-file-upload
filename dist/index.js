@@ -124,11 +124,7 @@ function run() {
             const config = (0, config_1.getConfig)();
             const fileDetails = yield (0, getAllFiles_1.getAllFiles)(config.source_path);
             const modifiedFiles = (0, modifyFileContents_1.modifyFileContents)(fileDetails, config);
-            // Define SPSave Configuration
-            const coreOptions = {
-                siteUrl: config.siteUrl
-            };
-            yield (0, uploadToSPO_1.uploadToSPO)();
+            (0, uploadToSPO_1.uploadToSPO)();
         }
         catch (error) {
             if (error instanceof Error) {
@@ -187,49 +183,38 @@ exports.modifyFileContents = modifyFileContents;
 /***/ }),
 
 /***/ 96382:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.uploadToSPO = void 0;
 const core_1 = __nccwpck_require__(42186);
 const spsave_1 = __nccwpck_require__(26338);
 function uploadToSPO() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const siteUrl = (0, core_1.getInput)("site_url");
-        const username = (0, core_1.getInput)("username");
-        const password = (0, core_1.getInput)("password");
-        const destinationPath = (0, core_1.getInput)("destination_path");
-        const source_path = (0, core_1.getInput)("source_path").split(";");
-        const base = (0, core_1.getInput)("base");
-        const coreOptions = {
-            siteUrl: siteUrl
-        };
-        const credentials = {
-            username: username,
-            password: password,
-            online: true
-        };
-        const fileOptions = {
-            folder: destinationPath,
-            glob: source_path,
-            base: base
-        };
-        // Upload to SPO
-        yield (0, spsave_1.spsave)(coreOptions, credentials, fileOptions)
-            .catch(err => {
-            throw new Error(err);
-        });
+    const siteUrl = (0, core_1.getInput)("site_url");
+    const username = (0, core_1.getInput)("username");
+    const password = (0, core_1.getInput)("password");
+    const destinationPath = (0, core_1.getInput)("destination_path");
+    const source_path = (0, core_1.getInput)("source_path").split(";");
+    const base = (0, core_1.getInput)("base");
+    const coreOptions = {
+        siteUrl: siteUrl
+    };
+    const credentials = {
+        username: username,
+        password: password,
+        online: true
+    };
+    const fileOptions = {
+        folder: destinationPath,
+        glob: source_path,
+        base: base
+    };
+    // Upload to SPO
+    (0, spsave_1.spsave)(coreOptions, credentials, fileOptions)
+        .catch(err => {
+        throw new Error(err);
     });
 }
 exports.uploadToSPO = uploadToSPO;

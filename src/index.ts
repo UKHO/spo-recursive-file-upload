@@ -13,12 +13,7 @@ async function run(): Promise<void> {
 
         const modifiedFiles = modifyFileContents(fileDetails, config);
 
-        // Define SPSave Configuration
-        const coreOptions = {
-            siteUrl: config.siteUrl
-        }
-
-        await uploadToSPO();
+        uploadToSPO();
 
     } catch (error) {
         if (error instanceof Error) {

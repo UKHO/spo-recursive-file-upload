@@ -2,7 +2,7 @@ import { info, getInput } from "@actions/core";
 import { ICoreOptions, IFileContentOptions, spsave } from "spsave";
 import { Config } from "./config"
 
-export async function uploadToSPO() {
+export function uploadToSPO() {
 
     const siteUrl = getInput("site_url")
     const username = getInput("username")
@@ -28,7 +28,7 @@ export async function uploadToSPO() {
     }
 
     // Upload to SPO
-    await spsave(coreOptions, credentials, fileOptions)
+    spsave(coreOptions, credentials, fileOptions)
         .catch(err => {
             throw new Error(err)
         })
