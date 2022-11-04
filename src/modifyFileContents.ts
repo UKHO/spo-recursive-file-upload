@@ -16,7 +16,7 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
             filesToUpload.push({
                 fileName: fileDetail.name,
                 fileContent: fileDetail.buffer,
-                folder: config.destinationPath
+                folder: fileDetail.path
             });
         } else {
 
@@ -30,7 +30,7 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
             filesToUpload.push({
                 fileName: fileDetail.name,
                 fileContent: fileAsString,
-                folder: config.destinationPath
+                folder: fileDetail.path
             })
         }
     });

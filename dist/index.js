@@ -1,6 +1,106 @@
 require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 20088:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getConfig = void 0;
+function getConfig() {
+    // Get action inputs.
+    const siteUrl = 'https://xildev.sharepoint.com/sites/DevSite';
+    const username = 'thomas.barham@xildev.onmicrosoft.com';
+    const password = '5L35Jxr4!';
+    const destinationPath = 'Shared Documents/How Do I';
+    const source_path = ['D:\\Github\\how-do-i\\docs'];
+    return {
+        siteUrl,
+        username,
+        password,
+        destinationPath,
+        source_path,
+    };
+}
+exports.getConfig = getConfig;
+//# sourceMappingURL=config.js.map
+
+/***/ }),
+
+/***/ 69843:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getAllFiles = void 0;
+const core_1 = __nccwpck_require__(42186);
+const fs_1 = __nccwpck_require__(57147);
+const recursiveReadDir = __importStar(__nccwpck_require__(6715));
+const path_1 = __nccwpck_require__(71017);
+function getAllFiles(config) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const fileDetails = [];
+        for (const sourcePath of config.source_path) {
+            (0, core_1.info)("Starting: " + sourcePath);
+            const files = yield recursiveReadDir.default(sourcePath);
+            (0, core_1.info)(files.toString());
+            for (const file of files) {
+                (0, core_1.info)("Reading:" + file);
+                const buffer = (0, fs_1.readFileSync)(file);
+                fileDetails.push({
+                    name: (0, path_1.basename)(file),
+                    path: getFolderToUpload(sourcePath, config.destinationPath, file),
+                    buffer: buffer,
+                });
+            }
+        }
+        (0, core_1.info)("Collection of:" + fileDetails.length);
+        return fileDetails;
+    });
+}
+exports.getAllFiles = getAllFiles;
+function getFolderToUpload(sourcePath, destinationFolder, filePath) {
+    const relativePath = (0, path_1.relative)(sourcePath, (0, path_1.dirname)(filePath));
+    return destinationFolder + "/" + relativePath;
+}
+//# sourceMappingURL=getAllFiles.js.map
+
+/***/ }),
+
 /***/ 94822:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -18,13 +118,18 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __nccwpck_require__(42186);
 const uploadToSPO_1 = __nccwpck_require__(96382);
+const config_1 = __nccwpck_require__(20088);
+const getAllFiles_1 = __nccwpck_require__(69843);
+const modifyFileContents_1 = __nccwpck_require__(2504);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            //const config = getConfig();
-            //const fileDetails = await getAllFiles(config.source_path);
-            //const modifiedFiles = modifyFileContents(fileDetails, config);
-            (0, uploadToSPO_1.uploadToSPO)();
+            const config = (0, config_1.getConfig)();
+            const fileDetails = yield (0, getAllFiles_1.getAllFiles)(config);
+            const modifiedFiles = (0, modifyFileContents_1.modifyFileContents)(fileDetails, config);
+            for (const modifiedFile of modifiedFiles) {
+                yield (0, uploadToSPO_1.uploadToSPO)(config, modifiedFile);
+            }
         }
         catch (error) {
             if (error instanceof Error) {
@@ -34,47 +139,90 @@ function run() {
     });
 }
 run();
-
+//# sourceMappingURL=index.js.map
 
 /***/ }),
 
-/***/ 96382:
+/***/ 2504:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.uploadToSPO = void 0;
+exports.modifyFileContents = void 0;
 const core_1 = __nccwpck_require__(42186);
+const path_1 = __nccwpck_require__(71017);
+function modifyFileContents(fileDetails, config) {
+    (0, core_1.info)("modifyFileContents Start");
+    const filesToUpload = [];
+    const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/";
+    fileDetails.forEach((fileDetail) => {
+        (0, core_1.info)(fileDetail.name);
+        if ((0, path_1.extname)(fileDetail.name) != ".md") {
+            console.log(`${fileDetail.name} is not a markdown file so skipping`);
+            (0, core_1.info)("Adding resources:" + fileDetail.name);
+            filesToUpload.push({
+                fileName: fileDetail.name,
+                fileContent: fileDetail.buffer,
+                folder: fileDetail.path
+            });
+        }
+        else {
+            (0, core_1.info)("processing:" + fileDetail.name);
+            let fileAsString = fileDetail.buffer.toString();
+            // Modify the file contents here!!!!
+            // modify absoulte path to resource images and link
+            fileAsString = fileAsString.replaceAll("\]\((?!http)", "](" + absoluteUrl);
+            filesToUpload.push({
+                fileName: fileDetail.name,
+                fileContent: fileAsString,
+                folder: fileDetail.path
+            });
+        }
+    });
+    return filesToUpload;
+}
+exports.modifyFileContents = modifyFileContents;
+//# sourceMappingURL=modifyFileContents.js.map
+
+/***/ }),
+
+/***/ 96382:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.uploadToSPO = void 0;
 const spsave_1 = __nccwpck_require__(26338);
-function uploadToSPO() {
-    const siteUrl = (0, core_1.getInput)("site_url");
-    const username = (0, core_1.getInput)("username");
-    const password = (0, core_1.getInput)("password");
-    const destinationPath = (0, core_1.getInput)("destination_path");
-    const source_path = (0, core_1.getInput)("source_path").split(";");
-    const base = (0, core_1.getInput)("base");
-    const coreOptions = {
-        siteUrl: siteUrl
-    };
-    const credentials = {
-        username: username,
-        password: password,
-        online: true
-    };
-    const fileOptions = {
-        folder: destinationPath,
-        glob: source_path,
-        base: base
-    };
-    // Upload to SPO
-    (0, spsave_1.spsave)(coreOptions, credentials, fileOptions)
-        .catch(err => {
-        throw new Error(err.message);
+function uploadToSPO(config, fileContentOptions) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const coreOptions = {
+            siteUrl: config.siteUrl
+        };
+        const credentials = {
+            username: config.username,
+            password: config.password,
+            online: true
+        };
+        // Upload to SPO
+        yield (0, spsave_1.spsave)(coreOptions, credentials, fileContentOptions)
+            .catch(err => {
+            throw new Error(err.message);
+        });
     });
 }
 exports.uploadToSPO = uploadToSPO;
-
+//# sourceMappingURL=uploadToSPO.js.map
 
 /***/ }),
 
@@ -49371,6 +49519,109 @@ if (process.env.READABLE_STREAM === 'disable' && Stream) {
   exports.Transform = __nccwpck_require__(34415);
   exports.PassThrough = __nccwpck_require__(81542);
 }
+
+
+/***/ }),
+
+/***/ 6715:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+var fs = __nccwpck_require__(57147);
+var p = __nccwpck_require__(71017);
+var minimatch = __nccwpck_require__(83973);
+
+function patternMatcher(pattern) {
+  return function(path, stats) {
+    var minimatcher = new minimatch.Minimatch(pattern, { matchBase: true });
+    return (!minimatcher.negate || stats.isFile()) && minimatcher.match(path);
+  };
+}
+
+function toMatcherFunction(ignoreEntry) {
+  if (typeof ignoreEntry == "function") {
+    return ignoreEntry;
+  } else {
+    return patternMatcher(ignoreEntry);
+  }
+}
+
+function readdir(path, ignores, callback) {
+  if (typeof ignores == "function") {
+    callback = ignores;
+    ignores = [];
+  }
+
+  if (!callback) {
+    return new Promise(function(resolve, reject) {
+      readdir(path, ignores || [], function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  ignores = ignores.map(toMatcherFunction);
+
+  var list = [];
+
+  fs.readdir(path, function(err, files) {
+    if (err) {
+      return callback(err);
+    }
+
+    var pending = files.length;
+    if (!pending) {
+      // we are done, woop woop
+      return callback(null, list);
+    }
+
+    files.forEach(function(file) {
+      var filePath = p.join(path, file);
+      fs.stat(filePath, function(_err, stats) {
+        if (_err) {
+          return callback(_err);
+        }
+
+        if (
+          ignores.some(function(matcher) {
+            return matcher(filePath, stats);
+          })
+        ) {
+          pending -= 1;
+          if (!pending) {
+            return callback(null, list);
+          }
+          return null;
+        }
+
+        if (stats.isDirectory()) {
+          readdir(filePath, ignores, function(__err, res) {
+            if (__err) {
+              return callback(__err);
+            }
+
+            list = list.concat(res);
+            pending -= 1;
+            if (!pending) {
+              return callback(null, list);
+            }
+          });
+        } else {
+          list.push(filePath);
+          pending -= 1;
+          if (!pending) {
+            return callback(null, list);
+          }
+        }
+      });
+    });
+  });
+}
+
+module.exports = readdir;
 
 
 /***/ }),

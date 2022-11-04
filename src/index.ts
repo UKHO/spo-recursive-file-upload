@@ -7,13 +7,15 @@ import { modifyFileContents } from "./modifyFileContents";
 async function run(): Promise<void> {
     try {
 
-        //const config = getConfig();
+        const config = getConfig();
 
-        //const fileDetails = await getAllFiles(config.source_path);
+        const fileDetails = await getAllFiles(config);
 
-        //const modifiedFiles = modifyFileContents(fileDetails, config);
+        const modifiedFiles = modifyFileContents(fileDetails, config);
 
-        uploadToSPO();
+        for(const modifiedFile of modifiedFiles) {
+            await uploadToSPO(config,modifiedFile);
+        }
 
     } catch (error) {
         if (error instanceof Error) {
