@@ -1,11 +1,19 @@
-import {info,getInput} from "@actions/core";
-import {ICoreOptions, IFileContentOptions, spsave} from "spsave";
-import {Config} from "./config"
+import { info, getInput } from "@actions/core";
+import { ICoreOptions, IFileContentOptions, spsave } from "spsave";
+import { Config } from "./config"
 
-export async function uploadToSPO(coreOptions : ICoreOptions, config: Config, fileOptions: IFileContentOptions) {
+export async function uploadToSPO() {
 
+    const siteUrl = getInput("site_url")
     const username = getInput("username")
     const password = getInput("password")
+    const destinationPath = getInput("destination_path")
+    const source_path = getInput("source_path").split(";")
+    const base = getInput("base")
+
+    const coreOptions = {
+        siteUrl: siteUrl
+      }
 
     const credentials = {
         username: username,
@@ -13,13 +21,17 @@ export async function uploadToSPO(coreOptions : ICoreOptions, config: Config, fi
         online: true
     }
 
-    info("Uploading: " + fileOptions.fileName);
+    const fileOptions = {
+        folder: destinationPath,
+        glob: source_path,
+        base: base
+    }
+
     // Upload to SPO
     await spsave(coreOptions, credentials, fileOptions)
         .catch(err => {
             throw new Error(err)
         })
-    info("Uploaded: " + fileOptions.fileName);
 
 }
 

@@ -18,9 +18,7 @@ async function run(): Promise<void> {
             siteUrl: config.siteUrl
         }
 
-        for (const modifiedFile of modifiedFiles) {
-            await uploadToSPO(coreOptions, config, modifiedFile);
-        }
+        await uploadToSPO();
 
     } catch (error) {
         if (error instanceof Error) {
