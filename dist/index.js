@@ -2,25 +2,28 @@ require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 20088:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getConfig = void 0;
+const core_1 = __nccwpck_require__(42186);
 function getConfig() {
     // Get action inputs.
-    const siteUrl = 'https://xildev.sharepoint.com/sites/DevSite';
-    const username = 'thomas.barham@xildev.onmicrosoft.com';
-    const password = '5L35Jxr4!';
-    const destinationPath = 'Shared Documents/How Do I';
-    const source_path = ['D:\\Github\\how-do-i\\docs'];
+    const siteUrl = (0, core_1.getInput)("site_url");
+    const username = (0, core_1.getInput)("username");
+    const password = (0, core_1.getInput)("password");
+    const destinationPath = (0, core_1.getInput)("destination_path");
+    const source_path = (0, core_1.getInput)("source_path").split(";");
+    const base = (0, core_1.getInput)("base");
     return {
         siteUrl,
         username,
         password,
         destinationPath,
         source_path,
+        base
     };
 }
 exports.getConfig = getConfig;
@@ -156,6 +159,8 @@ function modifyFileContents(fileDetails, config) {
     (0, core_1.info)("modifyFileContents Start");
     const filesToUpload = [];
     const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/";
+    const regex = /\]\((?!http)/ig;
+    const regexReplace = "](" + absoluteUrl;
     fileDetails.forEach((fileDetail) => {
         (0, core_1.info)(fileDetail.name);
         if ((0, path_1.extname)(fileDetail.name) != ".md") {
@@ -172,7 +177,7 @@ function modifyFileContents(fileDetails, config) {
             let fileAsString = fileDetail.buffer.toString();
             // Modify the file contents here!!!!
             // modify absoulte path to resource images and link
-            fileAsString = fileAsString.replaceAll("\]\((?!http)", "](" + absoluteUrl);
+            fileAsString = fileAsString.replaceAll(regex, regexReplace);
             filesToUpload.push({
                 fileName: fileDetail.name,
                 fileContent: fileAsString,
