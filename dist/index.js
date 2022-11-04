@@ -39,16 +39,11 @@ exports.getConfig = getConfig;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getAllFiles = void 0;
 const fs_1 = __nccwpck_require__(57147);
-const path_1 = __nccwpck_require__(71017);
 function getAllFiles(sourcePaths) {
     const fileDetails = [];
     sourcePaths.forEach((sourcePath) => {
         const files = (0, fs_1.readdirSync)(sourcePath);
         files.forEach((file) => {
-            if ((0, path_1.extname)(file) != ".md") {
-                console.log(`${file} is not a markdown file so skipping`);
-                return;
-            }
             const buffer = (0, fs_1.readFileSync)(file);
             fileDetails.push({
                 name: file,
@@ -89,7 +84,7 @@ function run() {
             const config = (0, config_1.getConfig)();
             const fileDetails = (0, getAllFiles_1.getAllFiles)(config.source_path);
             const modifiedFiles = (0, modifyFileContents_1.modifyFileContents)(fileDetails, config.destinationPath);
-            // D    efine SPSave Configuration
+            // Define SPSave Configuration
             const coreOptions = {
                 siteUrl: config.siteUrl
             };
@@ -114,15 +109,20 @@ run();
 /***/ }),
 
 /***/ 2504:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.modifyFileContents = void 0;
+const path_1 = __nccwpck_require__(71017);
 function modifyFileContents(fileDetails, destinationPath) {
     const modifiedFiles = [];
     fileDetails.forEach((fileDetail) => {
+        if ((0, path_1.extname)(fileDetail.name) != ".md") {
+            console.log(`${fileDetail.name} is not a markdown file so skipping`);
+            return;
+        }
         const fileAsString = fileDetail.buffer.toString();
         // Modify the file contents here!!!!
         modifiedFiles.push({
