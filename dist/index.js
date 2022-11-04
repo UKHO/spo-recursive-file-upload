@@ -32,23 +32,47 @@ exports.getConfig = getConfig;
 /***/ }),
 
 /***/ 69843:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getAllFiles = void 0;
 const fs_1 = __nccwpck_require__(57147);
+const recursiveReadDir = __importStar(__nccwpck_require__(6715));
 function getAllFiles(sourcePaths) {
     const fileDetails = [];
     sourcePaths.forEach((sourcePath) => {
-        const files = (0, fs_1.readdirSync)(sourcePath);
-        files.forEach((file) => {
-            const filePath = sourcePath + "/" + file;
-            const buffer = (0, fs_1.readFileSync)(filePath);
-            fileDetails.push({
-                name: filePath,
-                buffer: buffer,
+        recursiveReadDir.default(sourcePath, (err, files) => {
+            files.forEach((file) => {
+                const buffer = (0, fs_1.readFileSync)(file);
+                fileDetails.push({
+                    name: file,
+                    buffer: buffer,
+                });
             });
         });
     });
@@ -49461,6 +49485,109 @@ if (process.env.READABLE_STREAM === 'disable' && Stream) {
   exports.Transform = __nccwpck_require__(34415);
   exports.PassThrough = __nccwpck_require__(81542);
 }
+
+
+/***/ }),
+
+/***/ 6715:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+var fs = __nccwpck_require__(57147);
+var p = __nccwpck_require__(71017);
+var minimatch = __nccwpck_require__(83973);
+
+function patternMatcher(pattern) {
+  return function(path, stats) {
+    var minimatcher = new minimatch.Minimatch(pattern, { matchBase: true });
+    return (!minimatcher.negate || stats.isFile()) && minimatcher.match(path);
+  };
+}
+
+function toMatcherFunction(ignoreEntry) {
+  if (typeof ignoreEntry == "function") {
+    return ignoreEntry;
+  } else {
+    return patternMatcher(ignoreEntry);
+  }
+}
+
+function readdir(path, ignores, callback) {
+  if (typeof ignores == "function") {
+    callback = ignores;
+    ignores = [];
+  }
+
+  if (!callback) {
+    return new Promise(function(resolve, reject) {
+      readdir(path, ignores || [], function(err, data) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  }
+
+  ignores = ignores.map(toMatcherFunction);
+
+  var list = [];
+
+  fs.readdir(path, function(err, files) {
+    if (err) {
+      return callback(err);
+    }
+
+    var pending = files.length;
+    if (!pending) {
+      // we are done, woop woop
+      return callback(null, list);
+    }
+
+    files.forEach(function(file) {
+      var filePath = p.join(path, file);
+      fs.stat(filePath, function(_err, stats) {
+        if (_err) {
+          return callback(_err);
+        }
+
+        if (
+          ignores.some(function(matcher) {
+            return matcher(filePath, stats);
+          })
+        ) {
+          pending -= 1;
+          if (!pending) {
+            return callback(null, list);
+          }
+          return null;
+        }
+
+        if (stats.isDirectory()) {
+          readdir(filePath, ignores, function(__err, res) {
+            if (__err) {
+              return callback(__err);
+            }
+
+            list = list.concat(res);
+            pending -= 1;
+            if (!pending) {
+              return callback(null, list);
+            }
+          });
+        } else {
+          list.push(filePath);
+          pending -= 1;
+          if (!pending) {
+            return callback(null, list);
+          }
+        }
+      });
+    });
+  });
+}
+
+module.exports = readdir;
 
 
 /***/ }),

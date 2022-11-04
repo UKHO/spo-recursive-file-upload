@@ -1,5 +1,6 @@
-import {readdirSync, readFileSync}  from "fs";
-import {extname} from "path";
+import {readFileSync}  from "fs";
+
+import * as recursiveReadDir from "recursive-readdir";
 
 export interface FileDetails {
     name: string,
@@ -9,17 +10,17 @@ export interface FileDetails {
 export function getAllFiles(sourcePaths: string[]) : FileDetails[] {
     const fileDetails: FileDetails[] = [];
     sourcePaths.forEach((sourcePath) => {
-        const files = readdirSync(sourcePath)
-
-        files.forEach((file) => {
-            const filePath = sourcePath + "/" + file
-            const buffer = readFileSync(filePath);
-
-            fileDetails.push({
-                name: filePath,
-                buffer: buffer,
+        recursiveReadDir.default(sourcePath, (err,files) => {
+            files.forEach((file) => {
+                const buffer = readFileSync(file);
+    
+                fileDetails.push({
+                    name: file,
+                    buffer: buffer,
+                })
             })
         })
+
     })
     return fileDetails;
 }
