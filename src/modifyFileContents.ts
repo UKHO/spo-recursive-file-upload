@@ -7,7 +7,9 @@ import { Config } from "./config";
 export function modifyFileContents(fileDetails: FileDetails[], config: Config): IFileContentOptions[] {
     info("modifyFileContents Start")
     const filesToUpload: IFileContentOptions[] = [];
-    const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/"
+    const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/";
+    const regex = /\]\((?!http)/ig;
+    const regexReplace = "](" + absoluteUrl;
     fileDetails.forEach((fileDetail) => {
         info(fileDetail.name)
         if (extname(fileDetail.name) != ".md") {
@@ -25,7 +27,7 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
 
             // Modify the file contents here!!!!
             // modify absoulte path to resource images and link
-            fileAsString = fileAsString.replaceAll("\]\((?!http)", "](" + absoluteUrl)
+            fileAsString = fileAsString.replaceAll(regex, regexReplace);
 
             filesToUpload.push({
                 fileName: fileDetail.name,
