@@ -1,8 +1,8 @@
-import {setFailed} from "@actions/core";
-import {uploadToSPO} from "./uploadToSPO";
-import {getConfig} from "./config";
-import {getAllFiles} from "./getAllFiles";
-import {modifyFileContents} from "./modifyFileContents";
+import { setFailed } from "@actions/core";
+import { uploadToSPO } from "./uploadToSPO";
+import { getConfig } from "./config";
+import { getAllFiles } from "./getAllFiles";
+import { modifyFileContents } from "./modifyFileContents";
 
 async function run(): Promise<void> {
     try {
@@ -18,9 +18,9 @@ async function run(): Promise<void> {
             siteUrl: config.siteUrl
         }
 
-        modifiedFiles.forEach((modifiedFile) => {
-            uploadToSPO(coreOptions,config,modifiedFile);
-        })
+        for (const modifiedFile of modifiedFiles) {
+            await uploadToSPO(coreOptions, config, modifiedFile);
+        }
 
     } catch (error) {
         if (error instanceof Error) {

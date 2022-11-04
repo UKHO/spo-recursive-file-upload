@@ -2,7 +2,7 @@ import {info} from "@actions/core";
 import {ICoreOptions, IFileContentOptions, spsave} from "spsave";
 import {Config} from "./config"
 
-export function uploadToSPO(coreOptions : ICoreOptions, config: Config, fileOptions: IFileContentOptions) {
+export async function uploadToSPO(coreOptions : ICoreOptions, config: Config, fileOptions: IFileContentOptions) {
 
     const credentials = {
         username: config.username,
@@ -11,7 +11,7 @@ export function uploadToSPO(coreOptions : ICoreOptions, config: Config, fileOpti
 
     info("Uploading: " + fileOptions.fileName);
     // Upload to SPO
-    spsave(coreOptions, credentials, fileOptions)
+    await spsave(coreOptions, credentials, fileOptions)
         .catch(err => {
             throw new Error(err)
         })

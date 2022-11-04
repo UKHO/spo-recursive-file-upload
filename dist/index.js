@@ -128,9 +128,9 @@ function run() {
             const coreOptions = {
                 siteUrl: config.siteUrl
             };
-            modifiedFiles.forEach((modifiedFile) => {
-                (0, uploadToSPO_1.uploadToSPO)(coreOptions, config, modifiedFile);
-            });
+            for (const modifiedFile of modifiedFiles) {
+                yield (0, uploadToSPO_1.uploadToSPO)(coreOptions, config, modifiedFile);
+            }
         }
         catch (error) {
             if (error instanceof Error) {
@@ -189,26 +189,37 @@ exports.modifyFileContents = modifyFileContents;
 /***/ }),
 
 /***/ 96382:
-/***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.uploadToSPO = void 0;
 const core_1 = __nccwpck_require__(42186);
 const spsave_1 = __nccwpck_require__(26338);
 function uploadToSPO(coreOptions, config, fileOptions) {
-    const credentials = {
-        username: config.username,
-        password: config.password
-    };
-    (0, core_1.info)("Uploading: " + fileOptions.fileName);
-    // Upload to SPO
-    (0, spsave_1.spsave)(coreOptions, credentials, fileOptions)
-        .catch(err => {
-        throw new Error(err);
+    return __awaiter(this, void 0, void 0, function* () {
+        const credentials = {
+            username: config.username,
+            password: config.password
+        };
+        (0, core_1.info)("Uploading: " + fileOptions.fileName);
+        // Upload to SPO
+        yield (0, spsave_1.spsave)(coreOptions, credentials, fileOptions)
+            .catch(err => {
+            throw new Error(err);
+        });
+        (0, core_1.info)("Uploaded: " + fileOptions.fileName);
     });
-    (0, core_1.info)("Uploaded: " + fileOptions.fileName);
 }
 exports.uploadToSPO = uploadToSPO;
 
