@@ -210,6 +210,8 @@ function uploadToSPO(coreOptions, config, fileOptions) {
     return __awaiter(this, void 0, void 0, function* () {
         const username = (0, core_1.getInput)("username");
         const password = (0, core_1.getInput)("password");
+        (0, core_1.info)(username.length.toString());
+        (0, core_1.info)(password.length.toString());
         const credentials = {
             username: username,
             password: password
