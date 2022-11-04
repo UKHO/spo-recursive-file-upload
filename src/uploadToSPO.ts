@@ -1,16 +1,22 @@
 import {info} from "@actions/core";
 import {ICoreOptions, IFileContentOptions, spsave} from "spsave";
-import {IUserCredentials} from "node-sp-auth/lib/src/auth/IAuthOptions";
-import {FileOptions} from "spsave/lib/src/core/SPSaveOptions";
+import {Config} from "./config"
 
-export function uploadToSPO(coreOptions : ICoreOptions, credentials: IUserCredentials, fileOptions: IFileContentOptions) {
+export function uploadToSPO(coreOptions : ICoreOptions, config: Config, fileOptions: IFileContentOptions) {
 
-    info(fileOptions.fileName);
+    const credentials = {
+        username: config.username,
+        password: config.password
+    }
+
+    info("Uploading: " + fileOptions.fileName);
     // Upload to SPO
     spsave(coreOptions, credentials, fileOptions)
         .catch(err => {
             throw new Error(err)
         })
+    info("Uploaded: " + fileOptions.fileName);
+
 }
 
 

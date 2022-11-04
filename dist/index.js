@@ -128,12 +128,8 @@ function run() {
             const coreOptions = {
                 siteUrl: config.siteUrl
             };
-            const credentials = {
-                username: config.username,
-                password: config.password
-            };
             modifiedFiles.forEach((modifiedFile) => {
-                (0, uploadToSPO_1.uploadToSPO)(coreOptions, credentials, modifiedFile);
+                (0, uploadToSPO_1.uploadToSPO)(coreOptions, config, modifiedFile);
             });
         }
         catch (error) {
@@ -201,13 +197,18 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.uploadToSPO = void 0;
 const core_1 = __nccwpck_require__(42186);
 const spsave_1 = __nccwpck_require__(26338);
-function uploadToSPO(coreOptions, credentials, fileOptions) {
-    (0, core_1.info)(fileOptions.fileName);
+function uploadToSPO(coreOptions, config, fileOptions) {
+    const credentials = {
+        username: config.username,
+        password: config.password
+    };
+    (0, core_1.info)("Uploading: " + fileOptions.fileName);
     // Upload to SPO
     (0, spsave_1.spsave)(coreOptions, credentials, fileOptions)
         .catch(err => {
         throw new Error(err);
     });
+    (0, core_1.info)("Uploaded: " + fileOptions.fileName);
 }
 exports.uploadToSPO = uploadToSPO;
 

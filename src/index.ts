@@ -18,13 +18,8 @@ async function run(): Promise<void> {
             siteUrl: config.siteUrl
         }
 
-        const credentials = {
-            username: config.username,
-            password: config.password
-        }
-
         modifiedFiles.forEach((modifiedFile) => {
-            uploadToSPO(coreOptions,credentials,modifiedFile);
+            uploadToSPO(coreOptions,config,modifiedFile);
         })
 
     } catch (error) {
