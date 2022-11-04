@@ -4,31 +4,35 @@ import {getConfig} from "./config";
 import {getAllFiles} from "./getAllFiles";
 import {modifyFileContents} from "./modifyFileContents";
 
-try {
+async function run(): Promise<void> {
+    try {
 
-    const config = getConfig();
+        const config = getConfig();
 
+        const fileDetails = getAllFiles(config.source_path);
 
-    const fileDetails = getAllFiles(config.source_path);
+        const modifiedFiles = modifyFileContents(fileDetails, config.destinationPath);
 
-    const modifiedFiles = modifyFileContents(fileDetails, config.destinationPath);
+        // Define SPSave Configuration
+        const coreOptions = {
+            siteUrl: config.siteUrl
+        }
 
-    // Define SPSave Configuration
-    const coreOptions = {
-        siteUrl: config.siteUrl
+        const credentials = {
+            username: config.username,
+            password: config.password
+        }
+
+        modifiedFiles.forEach((modifiedFile) => {
+            uploadToSPO(coreOptions,credentials,modifiedFile);
+        })
+
+    } catch (error) {
+        if (error instanceof Error) {
+            setFailed(error.message)
+        }
     }
 
-    const credentials = {
-        username: config.username,
-        password: config.password
-    }
-
-    modifiedFiles.forEach((modifiedFile) => {
-        uploadToSPO(coreOptions,credentials,modifiedFile);
-    })
-
-} catch (error) {
-    if (error instanceof Error) {
-        setFailed(error.message)
-    }
 }
+
+run();
