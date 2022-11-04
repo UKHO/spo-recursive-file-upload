@@ -4,23 +4,19 @@ import { getConfig } from "./config";
 import { getAllFiles } from "./getAllFiles";
 import { modifyFileContents } from "./modifyFileContents";
 
-async function run(): Promise<void> {
-    try {
+try {
 
-        const config = getConfig();
+    //const config = getConfig();
 
-        const fileDetails = await getAllFiles(config.source_path);
+    //const fileDetails = await getAllFiles(config.source_path);
 
-        const modifiedFiles = modifyFileContents(fileDetails, config);
+    //const modifiedFiles = modifyFileContents(fileDetails, config);
 
-        uploadToSPO();
+    uploadToSPO();
 
-    } catch (error) {
-        if (error instanceof Error) {
-            setFailed(error.message)
-        }
+} catch (error) {
+    if (error instanceof Error) {
+        setFailed(error.message)
     }
-
 }
 
-run();
