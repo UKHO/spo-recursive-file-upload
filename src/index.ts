@@ -11,7 +11,7 @@ async function run(): Promise<void> {
 
         const fileDetails = getAllFiles(config.source_path);
 
-        const modifiedFiles = modifyFileContents(fileDetails, config.destinationPath);
+        const modifiedFiles = modifyFileContents(fileDetails, config);
 
         // Define SPSave Configuration
         const coreOptions = {
