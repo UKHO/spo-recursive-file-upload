@@ -14,7 +14,7 @@ export async function getAllFiles(sourcePaths: string[]): Promise<FileDetails[]>
         info("Starting: " + sourcePath)
         const files = await recursiveReadDir.default(sourcePath)
         info(files.toString())
-        files.forEach((file) => {
+        for (const file of files) {
             info("Reading:" + file);
             const buffer = readFileSync(file);
 
@@ -22,7 +22,7 @@ export async function getAllFiles(sourcePaths: string[]): Promise<FileDetails[]>
                 name: file,
                 buffer: buffer,
             })
-        })
+        }
     }
 
     info("Collection of:" + fileDetails.length)

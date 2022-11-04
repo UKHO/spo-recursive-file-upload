@@ -80,14 +80,14 @@ function getAllFiles(sourcePaths) {
             (0, core_1.info)("Starting: " + sourcePath);
             const files = yield recursiveReadDir.default(sourcePath);
             (0, core_1.info)(files.toString());
-            files.forEach((file) => {
+            for (const file of files) {
                 (0, core_1.info)("Reading:" + file);
                 const buffer = (0, fs_1.readFileSync)(file);
                 fileDetails.push({
                     name: file,
                     buffer: buffer,
                 });
-            });
+            }
         }
         (0, core_1.info)("Collection of:" + fileDetails.length);
         return fileDetails;
