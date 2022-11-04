@@ -208,9 +208,11 @@ const core_1 = __nccwpck_require__(42186);
 const spsave_1 = __nccwpck_require__(26338);
 function uploadToSPO(coreOptions, config, fileOptions) {
     return __awaiter(this, void 0, void 0, function* () {
+        const username = (0, core_1.getInput)("username");
+        const password = (0, core_1.getInput)("password");
         const credentials = {
-            username: config.username,
-            password: config.password
+            username: username,
+            password: password
         };
         (0, core_1.info)("Uploading: " + fileOptions.fileName);
         // Upload to SPO

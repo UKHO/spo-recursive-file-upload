@@ -1,12 +1,15 @@
-import {info} from "@actions/core";
+import {info,getInput} from "@actions/core";
 import {ICoreOptions, IFileContentOptions, spsave} from "spsave";
 import {Config} from "./config"
 
 export async function uploadToSPO(coreOptions : ICoreOptions, config: Config, fileOptions: IFileContentOptions) {
 
+    const username = getInput("username")
+    const password = getInput("password")
+
     const credentials = {
-        username: config.username,
-        password: config.password
+        username: username,
+        password: password
     }
 
     info("Uploading: " + fileOptions.fileName);
