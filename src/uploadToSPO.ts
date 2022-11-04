@@ -1,6 +1,5 @@
-import { info, getInput } from "@actions/core";
-import { ICoreOptions, IFileContentOptions, spsave } from "spsave";
-import { Config } from "./config"
+import { getInput } from "@actions/core";
+import { spsave } from "spsave";
 
 export function uploadToSPO() {
 
@@ -13,7 +12,7 @@ export function uploadToSPO() {
 
     const coreOptions = {
         siteUrl: siteUrl
-      }
+    }
 
     const credentials = {
         username: username,
@@ -30,7 +29,7 @@ export function uploadToSPO() {
     // Upload to SPO
     spsave(coreOptions, credentials, fileOptions)
         .catch(err => {
-            throw new Error(err)
+            throw new Error(err.message)
         })
 
 }

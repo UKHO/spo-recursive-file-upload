@@ -33,7 +33,7 @@ function uploadToSPO() {
     // Upload to SPO
     (0, spsave_1.spsave)(coreOptions, credentials, fileOptions)
         .catch(err => {
-        throw new Error(err);
+        throw new Error(err.message);
     });
 }
 exports.uploadToSPO = uploadToSPO;
