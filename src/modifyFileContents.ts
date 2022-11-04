@@ -5,6 +5,7 @@ import { extname } from "path";
 import { Config } from "./config";
 
 export function modifyFileContents(fileDetails: FileDetails[], config: Config): IFileContentOptions[] {
+    info("modifyFileContents Start")
     const filesToUpload: IFileContentOptions[] = [];
     const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/"
     fileDetails.forEach((fileDetail) => {

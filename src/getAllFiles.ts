@@ -31,6 +31,8 @@ export function getAllFiles(sourcePaths: string[]): FileDetails[] {
         })
 
     })
+
+    info("Collection of:" + fileDetails.length)
     return fileDetails;
 }
 

@@ -84,6 +84,7 @@ function getAllFiles(sourcePaths) {
             });
         });
     });
+    (0, core_1.info)("Collection of:" + fileDetails.length);
     return fileDetails;
 }
 exports.getAllFiles = getAllFiles;
@@ -151,6 +152,7 @@ exports.modifyFileContents = void 0;
 const core_1 = __nccwpck_require__(42186);
 const path_1 = __nccwpck_require__(71017);
 function modifyFileContents(fileDetails, config) {
+    (0, core_1.info)("modifyFileContents Start");
     const filesToUpload = [];
     const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/";
     fileDetails.forEach((fileDetail) => {
