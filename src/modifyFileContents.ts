@@ -9,6 +9,7 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
     const filesToUpload: IFileContentOptions[] = [];
     const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/"
     fileDetails.forEach((fileDetail) => {
+        info(fileDetail.name)
         if (extname(fileDetail.name) != ".md") {
             console.log(`${fileDetail.name} is not a markdown file so skipping`);
             info("Adding resources:" + fileDetail.name);

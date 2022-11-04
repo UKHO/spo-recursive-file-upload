@@ -59,20 +59,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getAllFiles = void 0;
 const core_1 = __nccwpck_require__(42186);
 const fs_1 = __nccwpck_require__(57147);
 const recursiveReadDir = __importStar(__nccwpck_require__(6715));
 function getAllFiles(sourcePaths) {
-    const fileDetails = [];
-    sourcePaths.forEach((sourcePath) => {
-        (0, core_1.info)("Starting: " + sourcePath);
-        recursiveReadDir.default(sourcePath, (err, files) => {
-            if (err) {
-                (0, core_1.error)(err);
-                throw err;
-            }
+    return __awaiter(this, void 0, void 0, function* () {
+        const fileDetails = [];
+        for (const sourcePath of sourcePaths) {
+            (0, core_1.info)("Starting: " + sourcePath);
+            const files = yield recursiveReadDir.default(sourcePath);
             (0, core_1.info)(files.toString());
             files.forEach((file) => {
                 (0, core_1.info)("Reading:" + file);
@@ -82,10 +88,10 @@ function getAllFiles(sourcePaths) {
                     buffer: buffer,
                 });
             });
-        });
+        }
+        (0, core_1.info)("Collection of:" + fileDetails.length);
+        return fileDetails;
     });
-    (0, core_1.info)("Collection of:" + fileDetails.length);
-    return fileDetails;
 }
 exports.getAllFiles = getAllFiles;
 
@@ -116,7 +122,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const config = (0, config_1.getConfig)();
-            const fileDetails = (0, getAllFiles_1.getAllFiles)(config.source_path);
+            const fileDetails = yield (0, getAllFiles_1.getAllFiles)(config.source_path);
             const modifiedFiles = (0, modifyFileContents_1.modifyFileContents)(fileDetails, config);
             // Define SPSave Configuration
             const coreOptions = {
@@ -156,6 +162,7 @@ function modifyFileContents(fileDetails, config) {
     const filesToUpload = [];
     const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/";
     fileDetails.forEach((fileDetail) => {
+        (0, core_1.info)(fileDetail.name);
         if ((0, path_1.extname)(fileDetail.name) != ".md") {
             console.log(`${fileDetail.name} is not a markdown file so skipping`);
             (0, core_1.info)("Adding resources:" + fileDetail.name);

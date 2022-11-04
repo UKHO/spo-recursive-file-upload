@@ -9,7 +9,7 @@ async function run(): Promise<void> {
 
         const config = getConfig();
 
-        const fileDetails = getAllFiles(config.source_path);
+        const fileDetails = await getAllFiles(config.source_path);
 
         const modifiedFiles = modifyFileContents(fileDetails, config);
 

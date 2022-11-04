@@ -1,4 +1,4 @@
-import { info,error } from "@actions/core";
+import { info, error } from "@actions/core";
 import { readFileSync } from "fs";
 
 import * as recursiveReadDir from "recursive-readdir";
@@ -8,29 +8,22 @@ export interface FileDetails {
     buffer: Buffer
 }
 
-export function getAllFiles(sourcePaths: string[]): FileDetails[] {
+export async function getAllFiles(sourcePaths: string[]): Promise<FileDetails[]> {
     const fileDetails: FileDetails[] = [];
-    sourcePaths.forEach((sourcePath) => {
+    for (const sourcePath of sourcePaths) {
         info("Starting: " + sourcePath)
-        recursiveReadDir.default(sourcePath, (err, files) => {
-            if(err) {
-                error(err);
-                throw err;
-            }
+        const files = await recursiveReadDir.default(sourcePath)
+        info(files.toString())
+        files.forEach((file) => {
+            info("Reading:" + file);
+            const buffer = readFileSync(file);
 
-            info(files.toString())
-            files.forEach((file) => {
-                info("Reading:" + file);
-                const buffer = readFileSync(file);
-
-                fileDetails.push({
-                    name: file,
-                    buffer: buffer,
-                })
+            fileDetails.push({
+                name: file,
+                buffer: buffer,
             })
         })
-
-    })
+    }
 
     info("Collection of:" + fileDetails.length)
     return fileDetails;
