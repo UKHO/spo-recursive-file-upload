@@ -2,9 +2,11 @@
   "name": "spo-recursive-file-upload",
   "version": "1.0.0",
   "description": "Upload a file, or files recursively to SharePoint Online using the spsave package.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "package": "npm run build && ncc build --source-map --license licenses.txt"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,12 @@
   "dependencies": {
     "@actions/core": "^1.10.0",
     "@actions/github": "^5.1.1",
+    "@types/recursive-readdir": "^2.2.1",
+    "recursive-readdir": "^2.2.3",
     "spsave": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.34.0",
+    "typescript": "^4.8.4"
   }
 }
