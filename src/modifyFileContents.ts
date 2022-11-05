@@ -7,7 +7,7 @@ import { Config } from "./config";
 export function modifyFileContents(fileDetails: FileDetails[], config: Config): IFileContentOptions[] {
     info("modifyFileContents Start")
     const filesToUpload: IFileContentOptions[] = [];
-    const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/";
+    const absoluteUrl = (config.siteUrl + "/" + config.destinationPath + "/").replaceAll(" ","%20");
     const regex = /\]\((?!http)/ig;
     const regexReplace = "](" + absoluteUrl;
     fileDetails.forEach((fileDetail) => {

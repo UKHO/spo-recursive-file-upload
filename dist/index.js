@@ -158,7 +158,7 @@ const path_1 = __nccwpck_require__(71017);
 function modifyFileContents(fileDetails, config) {
     (0, core_1.info)("modifyFileContents Start");
     const filesToUpload = [];
-    const absoluteUrl = config.siteUrl + "/" + config.destinationPath + "/";
+    const absoluteUrl = (config.siteUrl + "/" + config.destinationPath + "/").replaceAll(" ", "%20");
     const regex = /\]\((?!http)/ig;
     const regexReplace = "](" + absoluteUrl;
     fileDetails.forEach((fileDetail) => {
