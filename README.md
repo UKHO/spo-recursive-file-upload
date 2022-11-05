@@ -30,8 +30,8 @@ with:
   username: ${{ secrets.SPO_USERNAME }}
   password: ${{ secrets.SPO_PASSWORD }}
   destination_path: Shared Documents
-  source_path: dist/my-file.txt
-  base: dist
+  source_path: docs
+  base: docs
   # or for multiple files
   # source_path: dist/my-file1.txt;dist/my-file2.txt
 ...
