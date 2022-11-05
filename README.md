@@ -4,12 +4,12 @@ Upload a file, or files, to SharePoint Online using the `spsave` package.
 
 ## Inputs
 
-`site_url`: Destination SPO site URL  
+`site_url`: Destination SPO site URL (witout tralling / i.e. https://site not https://site/)
 `username`: SPO account username. **Must have write privileges on the designated site.**  
 `password`: SPO account password.  
-`destination_path`: Relative destination path on SPO site. If path does not exist, it will be created.  
+`destination_path`: Relative destination path on SPO site. If path does not exist, it will be created. (without prefixed and trailing forward slash, i.e. 'How To Train Your Dragon/docs' not '/How To Train Your Dragon/docs/')  
 `source_path`: Source file path(s) to be uploaded to SPO. Separate multiple files using a semicolon `;`.
-`base`: If you want to preserve folders structure inside SharePoint folder, you can provide a base for you files. For example when using glob ['build/css/*.*'] and base: 'build', all css files will be loaded under [SharePoint folder]/css.  
+`base`: **DEPRICATED** If you want to preserve folders structure inside SharePoint folder, you can provide a base for you files. For example when using glob ['build/css/*.*'] and base: 'build', all css files will be loaded under [SharePoint folder]/css.  
 
 ## Things you need to know
 
