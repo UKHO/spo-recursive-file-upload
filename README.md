@@ -32,8 +32,6 @@ with:
   destination_path: Shared Documents
   source_path: docs
   base: docs
-  # or for multiple files
-  # source_path: dist/my-file1.txt;dist/my-file2.txt
 ...
 ```
 
