@@ -162,7 +162,7 @@ function modifyFileContents(fileDetails, config) {
     const regexlink = /\]\((\.)?(\/)?(?!http)/ig;
     const regexlinkReplace = "](" + absoluteUrl;
     const regexmd = /\.md\)/ig;
-    const regexmdReplace = "./md?web=1)";
+    const regexmdReplace = ".md?web=1)";
     fileDetails.forEach((fileDetail) => {
         (0, core_1.info)(fileDetail.name);
         if ((0, path_1.extname)(fileDetail.name) != ".md") {
