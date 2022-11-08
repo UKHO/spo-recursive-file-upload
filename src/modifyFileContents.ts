@@ -8,8 +8,10 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
     info("modifyFileContents Start")
     const filesToUpload: IFileContentOptions[] = [];
     const absoluteUrl = (config.siteUrl + "/" + config.destinationPath + "/").replaceAll(" ","%20");
-    const regex = /\]\((\.)?(\/)?(?!http)/ig;
-    const regexReplace = "](" + absoluteUrl;
+    const regexlink = /\]\((\.)?(\/)?(?!http)/ig;
+    const regexlinkReplace = "](" + absoluteUrl;
+    const regexmd = /\.md\)/ig
+    const regexmdReplace = "./md?web=1"
     fileDetails.forEach((fileDetail) => {
         info(fileDetail.name)
         if (extname(fileDetail.name) != ".md") {
@@ -27,7 +29,10 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
 
             // Modify the file contents here!!!!
             // modify absoulte path to resource images and link
-            fileAsString = fileAsString.replaceAll(regex, regexReplace);
+            fileAsString = fileAsString.replaceAll(regexlink, regexlinkReplace);
+            
+            // Adds ?web=1 to end of .md links
+            fileAsString = fileAsString.replaceAll(regexmd, regexmdReplace);
 
             filesToUpload.push({
                 fileName: fileDetail.name,
