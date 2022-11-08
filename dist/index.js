@@ -159,8 +159,10 @@ function modifyFileContents(fileDetails, config) {
     (0, core_1.info)("modifyFileContents Start");
     const filesToUpload = [];
     const absoluteUrl = (config.siteUrl + "/" + config.destinationPath + "/").replaceAll(" ", "%20");
-    const regex = /\]\((\.)?(\/)?(?!http)/ig;
-    const regexReplace = "](" + absoluteUrl;
+    const regexlink = /\]\((\.)?(\/)?(?!http)/ig;
+    const regexlinkReplace = "](" + absoluteUrl;
+    const regexmd = /\.md\)/ig;
+    const regexmdReplace = "./md?web=1";
     fileDetails.forEach((fileDetail) => {
         (0, core_1.info)(fileDetail.name);
         if ((0, path_1.extname)(fileDetail.name) != ".md") {
@@ -177,7 +179,9 @@ function modifyFileContents(fileDetails, config) {
             let fileAsString = fileDetail.buffer.toString();
             // Modify the file contents here!!!!
             // modify absoulte path to resource images and link
-            fileAsString = fileAsString.replaceAll(regex, regexReplace);
+            fileAsString = fileAsString.replaceAll(regexlink, regexlinkReplace);
+            // Adds ?web=1 to end of .md links
+            fileAsString = fileAsString.replaceAll(regexmd, regexmdReplace);
             filesToUpload.push({
                 fileName: fileDetail.name,
                 fileContent: fileAsString,
