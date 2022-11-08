@@ -11,7 +11,7 @@ export function modifyFileContents(fileDetails: FileDetails[], config: Config): 
     const regexlink = /\]\((\.)?(\/)?(?!http)/ig;
     const regexlinkReplace = "](" + absoluteUrl;
     const regexmd = /\.md\)/ig
-    const regexmdReplace = "./md?web=1"
+    const regexmdReplace = "./md?web=1)"
     fileDetails.forEach((fileDetail) => {
         info(fileDetail.name)
         if (extname(fileDetail.name) != ".md") {
